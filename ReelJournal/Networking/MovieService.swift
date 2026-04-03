@@ -6,7 +6,6 @@
 //
 
 import Foundation
-let TMDBBaseURLString = "https://api.themoviedb.org/3"
 
 protocol MovieServiceProtocol {
     func fetchMovies(_ endpoint: Endpoint) async throws -> MovieResponse
@@ -40,14 +39,20 @@ enum TMDBResponseError: Error {
 
 class MovieService: MovieServiceProtocol {
     func fetchMovies(_ endpoint: Endpoint) async throws -> MovieResponse {
-        guard let url = URL(string: endpoint.rawValue) else {
+        let urlString = TMDBBaseURLString + endpoint.rawValue
+        
+        guard let url = URL(string: urlString) else {
             throw TMDBResponseError.invalidParameters
         }
         
-        let (data, response) = try await URLSession.shared.data(from: url)
+        var request = URLRequest(url: url)
+        request.setValue("Bearer \(Secrets.tmdbAccessToken)", forHTTPHeaderField: "Authorization")
+        request.setValue("application/json", forHTTPHeaderField: "accept")
+        
+        let (data, response) = try await URLSession.shared.data(for: request)
         
         guard let httpURLResponse = response as? HTTPURLResponse,
-              (200...300).contains(httpURLResponse.statusCode) else {
+              (200...299).contains(httpURLResponse.statusCode) else {
             throw TMDBResponseError.invalidResponse
         }
         
