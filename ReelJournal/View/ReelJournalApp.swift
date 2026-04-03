@@ -12,7 +12,7 @@ import SwiftData
 struct ReelJournalApp: App {
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
-            Item.self,
+
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
@@ -25,7 +25,7 @@ struct ReelJournalApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            Feed()
         }
         .modelContainer(sharedModelContainer)
     }
