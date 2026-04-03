@@ -1,0 +1,21 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Xcode
+xcuserdata/
+*.xcodeproj/xcuserstate
+*.xcodeproj/project.xcworkspace/xcuserdata/
+DerivedData/
+*.hmap
+*.ipa
+
+# Swift Package Manager
+.build/
+SourcePackages/
+
+# Secrets — never commit API keys
+Secrets.plist
+*.env
+Config.xcconfig
