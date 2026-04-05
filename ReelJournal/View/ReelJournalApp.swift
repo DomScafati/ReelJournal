@@ -25,7 +25,7 @@ struct ReelJournalApp: App {
 
     var body: some Scene {
         WindowGroup {
-            Feed()
+            RootView()
         }
         .modelContainer(sharedModelContainer)
     }
