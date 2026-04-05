@@ -8,14 +8,116 @@
 import SwiftUI
 import SwiftData
 
-struct Feed: View {
-    @Environment(\.modelContext) private var modelContext
-
+struct RootView: View {
+    @State private var feedRouter = Router()
+    @State private var moviesRouter = Router()
+    @State private var settingsRouter = Router()
+    
     var body: some View {
-       
+        TabView {
+            Tab("Feed", systemImage: "film") {
+                NavigationStack(path: $feedRouter.path) {
+                    FeedView()
+                        .navigationDestination(for: Screen.self) { screen in
+                            // Further pages TBD
+                        }
+                }
+                .environment(feedRouter)
+                
+            }
+            
+            Tab("Movies", systemImage: "popcorn") {
+                NavigationStack(path: $moviesRouter.path) {
+                    MovieBrowserView()
+                        .navigationDestination(for: Screen.self) { screen in
+                            switch screen {
+                            case .favorites:
+                                FavoritesView()
+                            default:
+                                MovieDetailView()
+                            }
+                        }
+                }
+                .environment(moviesRouter)
+                
+            }
+            
+            Tab("Settings", systemImage: "gearshape") {
+                NavigationStack(path: $settingsRouter.path) {
+                    SettingsView()
+                        .navigationDestination(for: Screen.self) { screen in
+                            // Further pages TBD
+                        }
+                }
+                .environment(settingsRouter)
+                
+            }
+        }
+    }
+}
+
+struct FeedView: View {
+    @Environment(Router.self) var router
+    
+    var body: some View {
+        Text("")
+    }
+}
+
+struct MovieBrowserView: View {
+    @Environment(Router.self) var router
+    
+    var body: some View {
+        VStack {
+            Button {
+                router.push(.movieDetail)
+            } label: {
+                Text("Go To Details")
+            }
+            .padding()
+            
+            Button {
+                router.push(.favorites)
+            } label: {
+                Text("Go To Favorites")
+            }
+            .padding()
+        }
+    }
+}
+
+struct MovieDetailView: View {
+    @Environment(Router.self) var router
+    
+    var body: some View {
+        Button {
+            router.pop()
+        } label: {
+            Text("Go To Browser")
+        }
+    }
+}
+
+struct FavoritesView: View {
+    @Environment(Router.self) var router
+    
+    var body: some View {
+        Button {
+            router.pop()
+        } label: {
+            Text("Go To Browser")
+        }
+    }
+}
+
+struct SettingsView: View {
+    @Environment(Router.self) var router
+    
+    var body: some View {
+        Text("")
     }
 }
 
 #Preview {
-    Feed()
+    FeedView()
 }
