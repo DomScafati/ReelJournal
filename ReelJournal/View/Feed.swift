@@ -66,6 +66,11 @@ struct FeedView: View {
 
 struct MovieBrowserView: View {
     @Environment(Router.self) var router
+    @State var viewModel: MovieBrowserViewModel = MovieBrowserViewModel(MovieBrowserRepository(MovieService()))
+    
+    init() {
+        _viewModel = State(wrappedValue: MovieBrowserViewModel(MovieBrowserRepository(MovieService())))
+    }
     
     var body: some View {
         VStack {
@@ -82,6 +87,15 @@ struct MovieBrowserView: View {
                 Text("Go To Favorites")
             }
             .padding()
+            
+            List {
+                ForEach(viewModel.movies) { movie in
+                    Text(movie.title)
+                }
+            }
+        }
+        .task {
+            viewModel.getMovies()
         }
     }
 }
