@@ -11,6 +11,10 @@ struct MovieBrowserView: View {
     @Environment(Router.self) var router
     @State var viewModel: MovieBrowserViewModel = MovieBrowserViewModel(MovieBrowserRepository(MovieService()))
     
+    init() {
+        _viewModel = State(wrappedValue: MovieBrowserViewModel(MovieBrowserRepository(MovieService())))
+    }
+    
     var body: some View {
         VStack {
             Button {
