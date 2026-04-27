@@ -62,6 +62,8 @@ struct FeedView: View {
             if viewModel == nil {
                 viewModel = FeedViewModel(repository: feedRepository)
             }
+            
+            viewModel?.loadEntries()
         }
     }
 }
