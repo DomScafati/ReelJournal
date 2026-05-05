@@ -12,6 +12,7 @@ struct FeedView: View {
     @Environment(Router.self) var router
     @Environment(\.modelContext) var context
     @State var viewModel: FeedViewModel?
+    @State var selectedEntry: JournalEntry?
     @State var shouldShow: Bool = false
     
     var body: some View {
@@ -33,13 +34,6 @@ struct FeedView: View {
                                 .foregroundStyle(.mainGold1)
                         }
                 }
-                .sheet(isPresented: $shouldShow) {
-                    if let vm = viewModel {
-                        EntryEditorView(viewModel: vm, shouldShow: $shouldShow)
-                            .presentationDetents([.medium])
-                    }
-
-                }
             }
             .padding()
             
@@ -49,13 +43,30 @@ struct FeedView: View {
             ScrollView {
                 LazyVStack {
                     ForEach(viewModel?.entries ?? []) { entry in
-                        FeedEntryCard(entry: entry)
+                        FeedEntryCard(
+                            viewModel: viewModel!,
+                            entry: entry,
+                            selectedEntry: $selectedEntry,
+                            shouldShow: $shouldShow
+                        )
+                    
                         Divider()
                             .background(.mainGold1)
                     }
                 }
                 .listRowSeparator(.hidden)
             }
+        }
+        .sheet(isPresented: $shouldShow, onDismiss: { selectedEntry = nil } ) {
+            if let vm = viewModel {
+                EntryEditorView(
+                    viewModel: vm,
+                    shouldShow: $shouldShow,
+                    selectedEntry: selectedEntry
+                )
+                    .presentationDetents([.medium])
+            }
+            
         }
         .onAppear {
             let feedRepository = FeedRepository(context: context)
@@ -69,7 +80,10 @@ struct FeedView: View {
 }
 
 struct FeedEntryCard: View {
+    let viewModel: FeedViewModel
     let entry: JournalEntry
+    @Binding var selectedEntry: JournalEntry?
+    @Binding var shouldShow: Bool
     
     var body: some View {
         VStack {
@@ -84,13 +98,22 @@ struct FeedEntryCard: View {
                 
                 Spacer()
                 
-                Button {
+                Menu {
+                    Button("Edit") {
+                        selectedEntry = entry
+                        shouldShow.toggle()
+                    }
                     
+                    Button("Delete", role: .destructive) { // add deletion animation at some point
+                        viewModel.delete(entry)
+                        viewModel.loadEntries()
+                    }
                 } label: {
                     Image(systemName: "rectangle.and.pencil.and.ellipsis")
                         .symbolRenderingMode(.hierarchical)
                         .tint(.mainGold1)
                 }
+                
             }
             .padding()
             
