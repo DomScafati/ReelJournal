@@ -25,9 +25,9 @@ class MovieBrowserRepository: MovieBrowserRepositoryProtocol {
             do {
                 movieResponse = try await service.fetchMovies(.discover)
                 movies = movieResponse?.results
-            } catch {
-                //TODO: handle errors
-                print(error)
+                DebugLogger.printLog("Fetch Completed")
+            } catch(let error) {
+                DebugLogger.printError(error: error)
             }
     }
 }
