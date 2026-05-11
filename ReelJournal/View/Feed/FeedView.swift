@@ -33,6 +33,7 @@ struct FeedView: View {
                                 .frame(width: 45, height: 45)
                                 .foregroundStyle(.mainGold1)
                         }
+                        .accessibilityIdentifier(FeedAccessibility.addEntry.description)
                 }
             }
             .padding()

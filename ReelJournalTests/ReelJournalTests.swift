@@ -2,16 +2,21 @@
 //  ReelJournalTests.swift
 //  ReelJournalTests
 //
-//  Created by Dom S on 4/1/26.
+//  Created by Dom S on 5/6/26.
 //
 
-import Testing
+import XCTest
+
 @testable import ReelJournal
-
-struct ReelJournalTests {
-
-    @Test func example() async throws {
-        // Write your test here and use APIs like `#expect(...)` to check expected conditions.
+class ReelJournalTests: XCTestCase {
+    
+    override func setUpWithError() throws {
+        // set up
     }
-
+    
+    override class func tearDown() {
+        // tear down
+    }
+    
+    
 }

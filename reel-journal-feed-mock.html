@@ -336,6 +336,84 @@
     color: var(--text);
   }
 
+  /* MOVIE SEARCH (L2) */
+  .search-bar {
+    margin: 14px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 14px;
+  }
+
+  .search-icon { font-size: 15px; color: var(--muted); }
+
+  .search-input {
+    background: none;
+    border: none;
+    outline: none;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 300;
+    color: var(--text);
+    flex: 1;
+  }
+
+  .search-input::placeholder { color: var(--muted); }
+
+  .search-results {
+    padding: 0 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .search-result {
+    display: flex;
+    gap: 12px;
+    background: var(--surface2);
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    overflow: hidden;
+    cursor: pointer;
+    transition: border-color 0.15s;
+  }
+
+  .search-result:hover { border-color: var(--accent); }
+
+  .search-poster {
+    width: 48px;
+    height: 72px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    background: #1a1a2e;
+  }
+
+  .search-movie-info {
+    padding: 10px 10px 10px 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 3px;
+  }
+
+  .search-movie-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 14px;
+    color: var(--text);
+  }
+
+  .search-movie-meta {
+    font-size: 11px;
+    color: var(--muted);
+  }
+
+  /* ENTRY EDITOR (L3) */
   .modal-movie-card {
     margin: 14px 16px;
     display: flex;
@@ -344,7 +422,6 @@
     border-radius: 10px;
     border: 1px solid var(--border);
     overflow: hidden;
-    cursor: pointer;
   }
 
   .modal-poster {
@@ -553,32 +630,68 @@
 
 </div>
 
-<!-- MODAL -->
-<div class="modal-overlay" id="modalOverlay" onclick="handleOverlayClick(event)">
-  <div class="modal" id="modal">
+<!-- L2: MOVIE SEARCH MODAL -->
+<div class="modal-overlay" id="searchOverlay" onclick="handleOverlayClick(event, 'searchOverlay')">
+  <div class="modal" id="searchModal">
     <div class="modal-bar">
-      <button class="modal-close" onclick="closeModal()">✕</button>
+      <button class="modal-close" onclick="closeSearch()">✕</button>
+      <div class="modal-title">What did you watch?</div>
+      <div style="width:48px"></div>
+    </div>
+    <div class="search-bar">
+      <span class="search-icon">🔍</span>
+      <input class="search-input" placeholder="Search films…" type="text">
+    </div>
+    <div class="search-results">
+      <div class="search-result" onclick="selectFilm('Mulholland Drive', '2001 · David Lynch', '🎬')">
+        <div class="search-poster">🎬</div>
+        <div class="search-movie-info">
+          <div class="search-movie-title">Mulholland Drive</div>
+          <div class="search-movie-meta">2001 · David Lynch</div>
+        </div>
+      </div>
+      <div class="search-result" onclick="selectFilm('Memoria', '2021 · Apichatpong Weerasethakul', '🎞️')">
+        <div class="search-poster">🎞️</div>
+        <div class="search-movie-info">
+          <div class="search-movie-title">Memoria</div>
+          <div class="search-movie-meta">2021 · Apichatpong Weerasethakul</div>
+        </div>
+      </div>
+      <div class="search-result" onclick="selectFilm('The Zone of Interest', '2023 · Jonathan Glazer', '🍿')">
+        <div class="search-poster">🍿</div>
+        <div class="search-movie-info">
+          <div class="search-movie-title">The Zone of Interest</div>
+          <div class="search-movie-meta">2023 · Jonathan Glazer</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- L3: ENTRY EDITOR MODAL -->
+<div class="modal-overlay" id="editorOverlay" onclick="handleOverlayClick(event, 'editorOverlay')">
+  <div class="modal" id="editorModal">
+    <div class="modal-bar">
+      <button class="modal-close" onclick="closeEditor()">✕</button>
       <div class="modal-title">New Entry</div>
-      <button class="modal-post" onclick="closeModal()">Post</button>
+      <button class="modal-post" onclick="closeEditor()">Post</button>
     </div>
     <div class="modal-movie-card">
-      <div class="modal-poster">🎬</div>
+      <div class="modal-poster" id="editorPoster">🎬</div>
       <div class="modal-movie-info">
-        <div class="modal-movie-title">Mulholland Drive</div>
-        <div class="modal-movie-year">2001 · David Lynch</div>
+        <div class="modal-movie-title" id="editorTitle"></div>
+        <div class="modal-movie-year" id="editorYear"></div>
         <div class="modal-stars">
-          <span class="modal-star filled" onclick="setStars(1)">★</span>
-          <span class="modal-star filled" onclick="setStars(2)">★</span>
-          <span class="modal-star filled" onclick="setStars(3)">★</span>
-          <span class="modal-star filled" onclick="setStars(4)">★</span>
+          <span class="modal-star" onclick="setStars(1)">★</span>
+          <span class="modal-star" onclick="setStars(2)">★</span>
+          <span class="modal-star" onclick="setStars(3)">★</span>
+          <span class="modal-star" onclick="setStars(4)">★</span>
           <span class="modal-star" onclick="setStars(5)">★</span>
         </div>
       </div>
     </div>
     <textarea class="modal-editor" placeholder="What did you think of this film?" rows="5"></textarea>
     <div class="modal-tags">
-      <span class="modal-tag">#surrealist</span>
-      <span class="modal-tag">#lynch</span>
       <button class="add-tag">+ add tag</button>
     </div>
   </div>
@@ -586,13 +699,25 @@
 
 <script>
   function openModal() {
-    document.getElementById('modalOverlay').classList.add('open');
+    document.getElementById('searchOverlay').classList.add('open');
   }
-  function closeModal() {
-    document.getElementById('modalOverlay').classList.remove('open');
+  function closeSearch() {
+    document.getElementById('searchOverlay').classList.remove('open');
   }
-  function handleOverlayClick(e) {
-    if (e.target === document.getElementById('modalOverlay')) closeModal();
+  function closeEditor() {
+    document.getElementById('editorOverlay').classList.remove('open');
+  }
+  function handleOverlayClick(e, id) {
+    if (e.target === document.getElementById(id)) {
+      document.getElementById(id).classList.remove('open');
+    }
+  }
+  function selectFilm(title, meta, poster) {
+    document.getElementById('editorTitle').textContent = title;
+    document.getElementById('editorYear').textContent = meta;
+    document.getElementById('editorPoster').textContent = poster;
+    closeSearch();
+    document.getElementById('editorOverlay').classList.add('open');
   }
   function setStars(n) {
     const stars = document.querySelectorAll('.modal-star');
