@@ -8,6 +8,7 @@
 import SwiftUI
 import SwiftData
 
+// JSON compatible types
 @Model
 class JournalEntry {
     var movieTitle: String?

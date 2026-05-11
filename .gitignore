@@ -7,6 +7,8 @@
 xcuserdata/
 *.xcodeproj/xcuserstate
 *.xcodeproj/project.xcworkspace/xcuserdata/
+*.xcodeproj/xcshareddata/
+*.xcodeproj/project.xcworkspace/xcshareddata/
 DerivedData/
 *.hmap
 *.ipa
