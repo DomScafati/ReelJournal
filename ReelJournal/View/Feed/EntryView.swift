@@ -7,12 +7,24 @@
 
 import SwiftUI
 
+enum EntrySheetMode: Identifiable {
+    case create
+    case edit(JournalEntry)
+    
+    var id: AnyHashable {
+        switch self {
+        case .create: return "create"
+        case .edit(let journalEntry): return journalEntry.id
+        }
+    }
+}
+
 struct EntryEditorView: View {
     let viewModel: FeedViewModel
     @Binding var shouldShow: Bool
-    @State var selectedEntry: JournalEntry?
     @State var entryBody: String = "" // needed as a buffer for text editor, cannot pass selectedEntry.body into it.
-    
+    var selectedEntry: JournalEntry?
+
     var body: some View {
         NavigationStack {
             VStack {
