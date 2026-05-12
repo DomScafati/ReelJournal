@@ -1,143 +1,142 @@
-#🎬 CineLog — Movie Journal App
+# ReelJournal
 
 A personal movie journaling app inspired by Letterboxd, built with SwiftUI. Log films, write journal entries, and explore new movies — all in one place.
 
+> Currently in active MVP development.
 
-## 📱 App Overview
-CineLog lets users browse movies, save their favorites, and write personal journal entries tied to the films they watch. The app combines the discovery experience of a movie database with the intimacy of a personal journal.
+---
 
-## 🗺️ Screens & Features
-1. Journal Feed (Main Tab)
+## App Overview
 
-Social media–style scrollable feed of all journal entries
-Each entry card shows: movie poster thumbnail, movie title, star rating, entry date, and a journal excerpt
-Entries sorted by most recent
-Tap an entry to expand it to a full journal detail view
+ReelJournal lets users browse movies, write personal journal entries tied to films they've watched, and manage their viewing history — combining the discovery experience of a movie database with the intimacy of a personal journal.
 
-2. Movies Page
+---
 
-Collection view (LazyVGrid) displaying movie posters
-Filter by genre using a horizontally scrollable chip/pill selector
-Search bar with debounced input to avoid excessive API calls
-Pagination — loads more movies as the user scrolls to the bottom
-Tap a movie to go to its Detail Page
+## Screens & Features
 
-3. Movie Detail Page
+### Journal Feed
+- ✅ Scrollable feed of all journal entries
+- ✅ Entry cards showing movie title, body text, date, and tags
+- ✅ Create, edit, and delete entries via sheet modal
+- ⬜ Star rating input in entry composer
+- ⬜ Tag input and persistence in entry composer
+- ⬜ Movie selection wired into entry composer
 
-Full movie info pulled from the TMDB API (poster, title, overview, release date, genres, runtime, rating, cast — subject to what the API provides)
-"Add to Favorites" button — persisted with UserDefaults
-"Write Journal Entry" CTA — opens the journal entry composer for this movie
+### Movie Browser
+- ✅ Fetch and display popular movies from TMDB
+- ⬜ Search movies by title
+- ⬜ Genre filter chips
+- ⬜ Pagination on scroll
 
-4. Journal Entry Composer
+### Movie Detail
+- ⬜ Full movie info (poster, overview, release date, rating, cast)
+- ⬜ Write journal entry CTA
 
-Text editor for freeform journaling
-Star rating picker (1–5)
-Watch date selector
-Tied to the movie via its TMDB ID
-Data persisted with SwiftData
+### Settings
+- ⬜ Display name (editable, persisted)
+- ⬜ Appearance toggle (light / dark / system)
+- ⬜ Favorites list
 
-5. Settings Page
+---
 
-Display name (editable, persisted with UserDefaults)
-Light / Dark / System appearance toggle (persisted with UserDefaults)
-Favorites section preview with link to a full favorites list
+## Tech Stack & Architecture
 
+| Concern | Approach |
+|---|---|
+| UI | SwiftUI |
+| Architecture | MVVM + Repository Pattern |
+| Networking | URLSession + async/await |
+| Movie Data | TMDB API (free tier) |
+| Journal Persistence | SwiftData |
+| Settings & Favorites | UserDefaults (planned) |
+| Concurrency | Swift structured concurrency (`async/await`, `Task`, `@MainActor`) |
+| Logging | Custom `DebugLogger` with severity levels (DEBUG/Testing only) |
+| UI Testing | XCTest + Robot Pattern, in-memory SwiftData for test isolation |
 
-## 🛠️ Tech Stack & Architecture
-ConcernApproachUISwiftUIArchitectureMVVMNetworkingURLSession + async/await (modern concurrency)Movie DataTMDB API (free tier)Journal PersistenceSwiftDataSettings & FavoritesUserDefaultsConcurrencySwift structured concurrency (async/await, Task, @MainActor)PaginationCursor/page-based, triggered by scroll proximityDebounceCustom debounce on search using Task + try await Task.sleep
+---
 
-## 🏗️ Project Structure (Proposed)
-CineLog/
-├── App/
-│   └── CineLogApp.swift
-├── Core/
-│   ├── Networking/
-│   │   ├── NetworkService.swift        # URLSession wrapper, generic request method
-│   │   ├── Endpoint.swift              # Enum of all TMDB endpoints
-│   │   └── NetworkError.swift
-│   ├── Persistence/
-│   │   ├── SwiftDataModels.swift       # JournalEntry model
-│   │   └── UserDefaultsManager.swift  # Typed keys for settings & favorites
-├── Features/
-│   ├── Feed/
-│   │   ├── FeedView.swift
-│   │   └── FeedViewModel.swift
-│   ├── Movies/
-│   │   ├── MoviesView.swift
-│   │   ├── MoviesViewModel.swift       # Handles search debounce & pagination
-│   │   └── MovieDetailView.swift
-│   ├── Journal/
-│   │   ├── JournalEntryView.swift
-│   │   └── JournalEntryViewModel.swift
-│   └── Settings/
-│       └── SettingsView.swift
-├── Shared/
-│   ├── Views/
-│   │   ├── MoviePosterCard.swift
-│   │   ├── JournalEntryCard.swift
-│   │   └── StarRatingView.swift
-│   └── Models/
-│       ├── Movie.swift                 # Decodable TMDB response models
-│       └── Genre.swift
+## Project Structure
 
-## 🔌 API — TMDB (The Movie Database)
-Free API. Requires a free account to get an API key.
-Likely endpoints used:
+```
+ReelJournal/
+├── View/
+│   ├── ReelJournalApp.swift
+│   ├── RootView.swift
+│   ├── MovieBrowserView.swift
+│   ├── SettingView.swift
+│   └── Feed/
+│       ├── FeedView.swift
+│       └── EntryView.swift
+├── ViewModel/
+│   ├── FeedViewModel.swift
+│   └── MovieBrowserViewModel.swift
+├── Repository/
+│   ├── FeedRepository.swift
+│   └── MovieBrowserRepository.swift
+├── Networking/
+│   ├── MovieService.swift
+│   └── TMDBURL.swift
+├── Model/
+│   ├── JournalEntry.swift
+│   ├── Movie.swift
+│   └── AccessibilityIdentifiers.swift
+├── Navigation/
+│   ├── Router.swift
+│   └── Screen.swift
+└── Utility/
+    ├── DebugLogger.swift
+    ├── Secrets.swift
+    └── GlobalProperties.swift
+```
 
-GET /movie/popular — Popular movies (main grid, paginated)
-GET /search/movie — Search by title
-GET /genre/movie/list — All genres for filter chips
-GET /discover/movie?with_genres={id} — Filter movies by genre
-GET /movie/{id} — Full movie detail (runtime, cast, tagline, etc.)
-GET /movie/{id}/credits — Cast & crew
+---
 
+## Data Models
 
-## 📝 Full detail page fields will be confirmed once the API is explored during development.
-
-
-## 💾 Data Models (Sketch)
-swift// SwiftData — Journal Entry
+```swift
+// SwiftData — Journal Entry
 @Model class JournalEntry {
-    var id: UUID
-    var movieId: Int          // TMDB movie ID
     var movieTitle: String
+    var movieDirector: String
     var posterPath: String?
+    var releaseDate: String
+    var dateWatched: Date
+    var rating: Float
     var body: String
-    var rating: Int           // 1–5
-    var watchedDate: Date
-    var createdAt: Date
+    var tags: [String]
 }
 
-// UserDefaults — Settings
-struct AppSettings {
-    var displayName: String        // key: "display_name"
-    var colorScheme: String        // key: "color_scheme" ("light"/"dark"/"system")
-    var favoriteMovieIds: [Int]    // key: "favorite_ids"
+// TMDB API — Movie (Decodable, not persisted)
+struct Movie: Decodable {
+    var id: Int
+    var title: String
+    var overview: String
+    var posterPath: String?
+    var releaseDate: String
+    var genreIds: [Int]
+    var voteAverage: Double
 }
+```
 
-## ✅ MVP Scope (What's In)
+---
 
- Journal feed with all entries
- Movie grid with search, genre filter, and pagination
- Movie detail page
- Journal entry composer linked to a movie
- Favorites saved with UserDefaults
- Settings (name + appearance) saved with UserDefaults
- Networking layer with async/await
- Search debounce
+## API — TMDB
 
-## 🔮 Post-MVP Ideas
+Free API. Requires a free account to get an API key.
 
-iCloud sync for journal entries
-Watchlist feature
-Movie recommendations based on favorites
-Widget showing your last watched film
-Charts view — genres watched over time
+| Endpoint | Purpose |
+|---|---|
+| `GET /discover/movie` | Popular movies feed |
+| `GET /search/movie` | Search by title |
+| `GET /genre/movie/list` | Genre filter list |
+| `GET /movie/{id}` | Full movie detail |
+| `GET /movie/{id}/credits` | Cast & crew |
 
+---
 
-## 🚀 Getting Started
+## Getting Started
 
-Clone the repo
-Get a free API key from themoviedb.org
-Add your key to a Secrets.plist (not committed to git)
-Build and run on iOS 17+ / Xcode 15+
+1. Clone the repo
+2. Get a free API key from [themoviedb.org](https://www.themoviedb.org/)
+3. Add your Bearer token to a `Secrets.plist` (not committed to git)
+4. Build and run on iOS 17+ / Xcode 15+
