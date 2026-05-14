@@ -122,7 +122,7 @@ struct FeedEntryCard: View {
             Text(entry.body ?? "")
             Divider()
                 .background(.mainGold1)
-            TagList()
+            TagList(tags: entry.tags ?? [])
         }
     }
 }
