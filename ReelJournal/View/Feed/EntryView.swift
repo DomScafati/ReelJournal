@@ -7,22 +7,13 @@
 
 import SwiftUI
 
-enum EntrySheetMode: Identifiable {
-    case create
-    case edit(JournalEntry)
-    
-    var id: AnyHashable {
-        switch self {
-        case .create: return "create"
-        case .edit(let journalEntry): return journalEntry.id
-        }
-    }
-}
-
 struct EntryEditorView: View {
     let viewModel: FeedViewModel
     @Binding var shouldShow: Bool
     @State var entryBody: String = "" // needed as a buffer for text editor, cannot pass selectedEntry.body into it.
+    @State var tags: [String] = []
+    @State var newTag: String = ""
+    
     var selectedEntry: JournalEntry?
 
     var body: some View {
@@ -42,6 +33,30 @@ struct EntryEditorView: View {
                             .padding(.horizontal, 20)
                     }
                 }
+                Divider()
+                    .background(.mainGold1)
+                VStack {
+                    TextField(text: $newTag) {
+                        Text("Enter Tags")
+                    }
+                    .onSubmit {
+                        tags.append(newTag)
+                        newTag = ""
+                    }
+
+                    if tags.isEmpty {
+                        Spacer()
+                            .frame(height: 38)
+                    } else {
+                        TagList(tags: tags)
+                            .onTapGesture {
+                                //TODO: rework deleting tags. for now, we will delete on tap!
+                                tags = []
+                            }
+                    }
+                }
+                .padding(.bottom)
+                .padding(.horizontal)
             }
             .navigationTitle("Movie Entry")
             .navigationBarTitleDisplayMode(.inline)
@@ -57,10 +72,15 @@ struct EntryEditorView: View {
                             if let entry = selectedEntry {
                                 // updating existing entry
                                 entry.body = entryBody
+                                entry.tags = tags
                                 viewModel.save()
                             } else {
                                 // creating a new entry
-                                let newEntry = JournalEntry(body: entryBody)
+                                let newEntry = JournalEntry(
+                                    body: entryBody,
+                                    tags: tags
+                                )
+                                
                                 viewModel.add(newEntry)
                             }
                             viewModel.loadEntries()
@@ -74,6 +94,7 @@ struct EntryEditorView: View {
             }
             .onAppear {
                 entryBody = selectedEntry?.body ?? ""
+                tags = selectedEntry?.tags ?? []
             }
         }
     }
@@ -118,15 +139,21 @@ struct EntryMovieHeaderView: View {
 }
 
 struct TagList: View {
+    var tags: [String]
+    
     var body: some View {
-        Text("#"+"Lynch")
-            .foregroundStyle(.mainFontRegular)
-            .padding(.vertical, 5)
-            .padding(.horizontal)
-            .background {
-                Capsule(style: .circular)
-                    .foregroundStyle(.tintedGold1)
+        HStack {
+    // ForEach tag in the tag list, display it inline.
+            ForEach(tags, id: \.self) { tag in
+                Text("#\(tag)")
+                    .foregroundStyle(.mainFontRegular)
+                    .padding(.vertical, 5)
+                    .padding(.horizontal)
+                    .background {
+                        Capsule(style: .circular)
+                            .foregroundStyle(.tintedGold1)
+                    }
             }
-        
+        }
     }
 }
