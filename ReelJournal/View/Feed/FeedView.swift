@@ -85,6 +85,7 @@ struct FeedEntryCard: View {
     let entry: JournalEntry
     @Binding var selectedEntry: JournalEntry?
     @Binding var shouldShow: Bool
+    @State private var displayRating: Double = 0
     
     var body: some View {
         VStack {
@@ -118,11 +119,19 @@ struct FeedEntryCard: View {
             }
             .padding()
             
-            EntryMovieHeaderView(entry: entry)
+            EntryMovieHeaderView(
+                entry: entry,
+                ratingInterationEnabled: false,
+                rating: $displayRating
+            )
+            
             Text(entry.body ?? "")
             Divider()
                 .background(.mainGold1)
             TagList(tags: entry.tags ?? [])
+        }
+        .onAppear {
+            displayRating = entry.rating ?? 0
         }
     }
 }

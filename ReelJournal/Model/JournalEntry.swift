@@ -17,7 +17,7 @@ class JournalEntry {
     var releaseDate: Date?
 
     var dateWatched: Date?
-    var rating: Float?
+    var rating: Double?
     var body: String?
     var tags: [String]?
     
@@ -34,7 +34,7 @@ class JournalEntry {
         posterPath: String = "",
         releaseDate: Date = Date(),
         dateWatched: Date = Date(),
-        rating: Float? = nil,
+        rating: Double? = nil,
         body: String? = nil,
         tags: [String]? = nil
     ) {
