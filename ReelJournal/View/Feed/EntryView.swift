@@ -20,9 +20,9 @@ struct EntryEditorView: View {
     var body: some View {
         NavigationStack {
             VStack {
-                EntryMovieHeaderView(
+                EntryEditorMovieHeaderView(
                     entry: selectedEntry,
-                    ratingInterationEnabled: true,
+                    ratingInteractionEnabled: true,
                     rating: $rating
                 )
                 
@@ -107,9 +107,9 @@ struct EntryEditorView: View {
     }
 }
 
-struct EntryMovieHeaderView: View {
+struct EntryEditorMovieHeaderView: View {
     let entry: JournalEntry? // will be nil if creating an entry
-    let ratingInterationEnabled: Bool
+    let ratingInteractionEnabled: Bool
     @Binding var rating: Double
 
     var body: some View {
@@ -133,18 +133,19 @@ struct EntryMovieHeaderView: View {
                 
                 StarRatingView(
                     rating: $rating,
-                    interactionEnabled: ratingInterationEnabled
+                    interactionEnabled: ratingInteractionEnabled
                 )
             }
             .padding()
             
-            Spacer(minLength: 40)
+            Spacer()
             
         }
         .background {
             RoundedRectangle(cornerRadius: 14.0)
                 .foregroundStyle(.secondaryCharcoal)
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.horizontal)
         .padding(.bottom)
     }

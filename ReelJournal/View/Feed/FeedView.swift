@@ -85,7 +85,6 @@ struct FeedEntryCard: View {
     let entry: JournalEntry
     @Binding var selectedEntry: JournalEntry?
     @Binding var shouldShow: Bool
-    @State private var displayRating: Double = 0
     
     var body: some View {
         VStack {
@@ -119,20 +118,58 @@ struct FeedEntryCard: View {
             }
             .padding()
             
-            EntryMovieHeaderView(
-                entry: entry,
-                ratingInterationEnabled: false,
-                rating: $displayRating
-            )
+            FeedEntryHeaderView(entry: entry)
             
             Text(entry.body ?? "")
             Divider()
                 .background(.mainGold1)
             TagList(tags: entry.tags ?? [])
         }
-        .onAppear {
-            displayRating = entry.rating ?? 0
+    }
+}
+
+struct FeedEntryHeaderView: View {
+    let entry: JournalEntry // will be nil if creating an entry
+
+    var body: some View {
+        // Movie info card
+        HStack {
+            Image("") // movie poster
+                .padding()
+            
+            Rectangle()
+                .fill(Color.secondary)
+                .frame(width: 1.0)
+                .frame(maxHeight: .infinity)
+            
+            VStack(alignment: .leading) {
+                HStack {
+                    Text(entry.movieTitle ?? "") // search bar that allows for quick lookup?
+                    
+                    if let date = entry.releaseDate {
+                         Text(date, format: .dateTime.year())
+                     }
+                }
+                
+                .padding(.bottom)
+                
+                StarRatingView(
+                    rating: Binding.constant(entry.rating ?? 0),
+                    interactionEnabled: false
+                )
+            }
+            .padding()
+            
+            Spacer()
+            
         }
+        .background {
+            RoundedRectangle(cornerRadius: 14.0)
+                .foregroundStyle(.secondaryCharcoal)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.horizontal)
+        .padding(.bottom)
     }
 }
 
