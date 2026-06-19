@@ -65,7 +65,7 @@ struct FeedView: View {
                     shouldShow: $shouldShow,
                     selectedEntry: selectedEntry
                 )
-                    .presentationDetents([.medium])
+                .presentationDetents([.medium])
             }
             
         }
