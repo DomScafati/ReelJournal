@@ -14,6 +14,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: List available Xcode versions
+        run: |
+          ls /Applications | grep Xcode
+          xcodebuild -showsdks
+
       - name: Build and Test
         run: |
           xcodebuild test \
@@ -21,3 +26,10 @@ jobs:
             -scheme ReelJournal \
             -destination 'platform=iOS Simulator,name=iPhone 16,OS=latest' \
             CODE_SIGNING_ALLOWED=NO
+
+      - name: Upload test results
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: /Users/runner/Library/Developer/Xcode/DerivedData/ReelJournal-*/Logs/Test/*.xcresult
