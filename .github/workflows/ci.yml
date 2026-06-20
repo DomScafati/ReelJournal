@@ -21,3 +21,8 @@ jobs:
             -scheme ReelJournal \
             -destination 'platform=iOS Simulator,name=iPhone 16,OS=latest' \
             CODE_SIGNING_ALLOWED=NO
+
+        - name: List available Xcode versions
+            run: |
+            ls /Applications | grep Xcode
+            xcodebuild -showsdks
