@@ -1,16 +1,4 @@
-name: CI
-
-on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
-
-jobs:
-  build-and-test:
-    runs-on: macos-latest
-
-    steps:
+steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
@@ -26,3 +14,10 @@ jobs:
             -scheme ReelJournal \
             -destination 'platform=iOS Simulator,name=iPhone 16,OS=latest' \
             CODE_SIGNING_ALLOWED=NO
+
+      - name: Upload test results
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: /Users/runner/Library/Developer/Xcode/DerivedData/ReelJournal-*/Logs/Test/*.xcresult
